@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ordini Ricevuti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <div class="container mt-4">
+        <h2 class="mb-4">Ordini Ricevuti</h2>
+        <!--Mostra gli ordini ricevuti-->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID Ordine</th>
+                    <th>Data Acquisto</th>
+                    <th>Stato</th>
+                    <th>Indirizzo di Spedizione</th>
+                    <th>Data Prevista</th>
+                    <th>Utente</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ordine in ordini %}
+                <tr>
+                    <td>{{ ordine.id }}</td>
+                    <td>{{ ordine.dataacquisto }}</td>
+                    <td>{{ ordine.stato }}</td>
+                    <td>{{ ordine.indirizzospedizione }}</td>
+                    <td>{{ ordine.dataprevista }}</td>
+                    <td>{{ ordine.utente }}</td>
+                    <td>
+                        <form action="{{ url_for('update_order_status', ordine_id=ordine.id) }}" method="POST" class="d-inline">
+                            <select name="stato" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option {% if ordine.stato == 'In elaborazione' %}selected{% endif %} value="In elaborazione">In elaborazione</option>
+                                <option {% if ordine.stato == 'Spedito' %}selected{% endif %} value="Spedito">Spedito</option>
+                                <option {% if ordine.stato == 'Consegnato' %}selected{% endif %} value="Consegnato">Consegnato</option>
+                            </select>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer sempre in fondo -->
+   <footer class="bg-dark text-white py-4 mt-auto">
+    <div class="container text-center">
+        <p>&copy; 2024 Shoe Store. Tutti i diritti riservati.</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#" class="text-white">Privacy Policy</a></li>
+            <li class="list-inline-item"><a href="#" class="text-white">Termini di Servizio</a></li>
+            <li class="list-inline-item"><a href="#" class="text-white">Supporto</a></li>
+        </ul>
+    </div>
+</footer>
+<!-- Bootstrap JS and Popper.js -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

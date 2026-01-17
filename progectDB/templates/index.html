@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home - Shoe Store</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- Carosello -->
+    <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img
+            src="{{ url_for('static', filename='img/nikeintro.jpg') }}"
+            class="d-block w-100"
+            alt="Collezione 1"
+          />
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Scopri tutti i nostri nuovi prodotti</h5>
+            <p>Comfort e stile per ogni occasione.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img
+            src="{{ url_for('static', filename='img/sconti.jpg') }}"
+            class="d-block w-100"
+            alt="Collezione 2"
+          />
+          <div class="carousel-caption d-none d-md-block">
+            <h5>Promozioni Esclusive</h5>
+            <p>Approfitta delle offerte limitate.</p>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#productCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#productCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <h2></h2>
+    <!-- Sezione Categorie -->
+    <div id="categoriesCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row">
+            {% for categoria in categorie %}
+            <div class="col-md-4">
+              <div class="card h-100 text-center">
+                <!-- <p> Url "{{ categoria[2] }}"</p>-->
+                <img
+                  src="{{ categoria[2] }}"
+                  class="card-img-top"
+                  alt="{{ categoria.nome }}"
+                />
+                <div class="card-body">
+                  <h5 class="card-title">{{ categoria.nome }}</h5>
+                  <p class="card-text">{{ categoria.descrizione }}</p>
+                  <a
+                    href="{{ url_for('products', categoria_id=categoria.id) }}"
+                    class="btn btn-primary"
+                    >Esplora</a
+                  >
+                </div>
+              </div>
+            </div>
+            {% if loop.index % 3 == 0 and not loop.last %}
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row">{% endif %} {% endfor %}</div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev"
+        type="button"
+        data-bs-target="#categoriesCarousel"
+        data-bs-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button
+        class="carousel-control-next"
+        type="button"
+        data-bs-target="#categoriesCarousel"
+        data-bs-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+    <h2></h2>
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-4">
+      <div class="container text-center">
+        <p>&copy; 2024 Shoe Store. Tutti i diritti riservati.</p>
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Privacy Policy</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Termini di Servizio</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Supporto</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS e Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

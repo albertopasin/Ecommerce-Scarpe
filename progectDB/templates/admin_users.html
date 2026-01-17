@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Utenti - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100"> <!-- Layout con altezza minima 100vh -->
+
+    <div class="container mt-5 flex-grow-1"> <!-- Contenuto che si espande -->
+        <h1>Elenco Utenti</h1>
+
+        <!-- Messaggi Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Mostra in tabella tutti gli utenti-->
+        <table class="table table-striped table-bordered mt-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>Email</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Soprannome</th>
+                    <th>Venditore</th>
+                    <th>Telefono</th>
+                    <th>Data Nascita</th>
+                    <th>Codice Fiscale</th>
+                    <th>Azione</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.nome }}</td>
+                    <td>{{ user.cognome }}</td>
+                    <td>{{ user.soprannome }}</td>
+                    <td>{{ 'Si' if user.venditore else 'No' }}</td>
+                    <td>{{ user.ntelefono }}</td>
+                    <td>{{ user.datanascita }}</td>
+                    <td>{{ user.codfiscale }}</td>
+                    <td>
+                        <!-- Pulsante per eliminare l'utente -->
+                        <form method="POST" action="{{ url_for('delete_user', email=user.email) }}" style="display:inline;" onsubmit="return confirmDelete();">
+                         <button type="submit" class="btn btn-danger">Elimina</button>
+                        </form>
+
+                        <script type="text/javascript">
+                    function confirmDelete() {
+                        // Mostra la finestra di conferma
+                            return confirm("Sei sicuro di voler eliminare questo utente? L'operazione è irreversibile.");
+                            }
+                        </script>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>        
+        <a href="/admin" class="btn btn-secondary mt-3">Torna alla Dashboard</a>
+    </div>
+
+    <!-- Footer sempre in fondo -->
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p>&copy; 2024 Shoe Store. Tutti i diritti riservati.</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#" class="text-white">Privacy Policy</a></li>
+                <li class="list-inline-item"><a href="#" class="text-white">Termini di Servizio</a></li>
+                <li class="list-inline-item"><a href="#" class="text-white">Supporto</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

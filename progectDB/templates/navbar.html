@@ -1,0 +1,105 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <!-- Brand -->
+        <a class="navbar-brand" href="{{ url_for('index') }}">Shoe Store</a>
+        
+        <!-- Toggler per dispositivi mobili -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Campo di ricerca -->
+        <form class="d-flex me-auto ms-3" action="{{ url_for('search') }}" method="get" style="max-width: 300px;">
+            <input class="form-control me-2" type="search" name="query" placeholder="Cerca prodotti" aria-label="Cerca">
+            <button class="btn btn-outline-success" type="submit">Cerca</button>
+        </form>
+
+        <!-- Menu collapsible -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a href="{{ url_for('products') }}" class="nav-link">Prodotti</a>
+                </li>
+
+                {% if 'email' in session %}
+                    {% if session['venditore'] %}
+                        <!-- Opzioni per venditori -->
+                        <li class="nav-item">
+                            <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('user_dashboard') }}" class="nav-link">Ordini</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('sell') }}" class="nav-link">Vendi</a>
+                        </li>
+                    {% else %}
+                        <!-- Opzioni per utenti normali -->
+                        <li class="nav-item">
+                            <a href="{{ url_for('user_dashboard') }}" class="nav-link">Ordini</a>
+                        </li>
+                    {% endif %}
+
+                    <!-- Icona del carrello -->
+                    <li>
+                        <a class="nav-link" id="cart" href="{{ url_for('cart') }}">
+                            <img src="{{ url_for('static', filename='img/cart.png') }}" alt="Carrello" class="rounded-circle" width="30" height="30">
+                        </a>
+                    </li>
+                {% else %}
+                    <!-- Messaggi e opzioni per utenti non loggati -->
+                    <li class="nav-item">
+                        <span class="nav-link text-secondary">Messaggi: Effettua il login per visualizzarli</span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}" role="button">
+                            <img src="{{ url_for('static', filename='img/user.jpg') }}" alt="Profilo" class="rounded-circle" width="30" height="30">
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+
+        <!-- Menu a tendina del profilo -->
+        {% if 'email' in session %}
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ url_for('static', filename='img/user.jpg') }}" alt="Profilo" class="rounded-circle" width="30" height="30">
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                    <li><a class="dropdown-item" href="{{ url_for('user_profile') }}">Profilo</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+                    <li><a class="dropdown-item" href="#" data-bs-toggle="offcanvas" data-bs-target="#messagesPanel" aria-controls="messagesPanel">Messaggi</a></li>
+                </ul>
+            </div>
+        {% endif %}
+    </div>
+</nav>
+
+<!-- Offcanvas per i messaggi -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="messagesPanel" aria-labelledby="messagesPanelLabel" style="width: 25%;">
+    <div class="offcanvas-header">
+        {% if session.get('email') %}
+        <h5 id="messagesPanelLabel">Messaggi</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        {% endif %} 
+    </div>
+    <div class="offcanvas-body">
+        {% if session.get('email') %}
+            <!-- Lista dei messaggi per utenti loggati -->
+            <ul class="list-group">
+                {% for messaggio in messaggi %}
+                    <li class="list-group-item">
+                        <p><strong>{{ messaggio.titolo }}</strong></p>
+                        <p>{{ messaggio.testo }}</p>
+                        <small class="text-muted">{{ messaggio.data }}</small>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">Nessun messaggio presente.</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
+

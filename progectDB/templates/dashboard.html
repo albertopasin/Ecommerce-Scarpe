@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Venditore</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <div class="container mt-4">
+      <h2 class="mb-4">Dashboard Venditore</h2>
+
+      <div class="row">
+        <!-- Card per il totale dei prodotti -->
+        <div class="col-md-4">
+          <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Totale Prodotti</div>
+            <div class="card-body">
+              <h5 class="card-title">{{ total_products }}</h5>
+              <p class="card-text">Numero totale di prodotti in vendita.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card per gli ordini -->
+        <div class="col-md-4">
+          <a
+            href="{{ url_for('orders_received') }}"
+            class="text-decoration-none"
+          >
+            <div class="card text-white bg-success mb-3">
+              <div class="card-header">Ordini Ricevuti</div>
+              <div class="card-body">
+                <h5 class="card-title">{{ total_orders }}</h5>
+                <p class="card-text">Numero totale di ordini ricevuti.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Card per le recensioni -->
+        <div class="col-md-4">
+          <a
+            href="{{ url_for('orders_recensioni') }}"
+            class="text-decoration-none"
+          >
+            <div class="card text-white bg-info mb-3">
+              <div class="card-header">Media Recensioni</div>
+              <div class="card-body">
+                <h5 class="card-title">{{ avg_rating }}</h5>
+                <p class="card-text">Valutazione media dei tuoi prodotti.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Tabella per visualizzare i dettagli dei prodotti -->
+        <div class="col-md-12">
+          <div class="card mb-3">
+            <div class="card-header">Dettagli dei Prodotti</div>
+            <div class="card-body">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>Nome</th>
+                    <th>Prezzo</th>
+                    <th>Recensioni</th>
+                    <th>Valutazione Media</th>
+                    <th>Quantità Disponibile</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for product in products %}
+                  <tr>
+                    <td>{{ product.nome }}</td>
+                    <td>€{{ product.prezzo }}</td>
+                    <td>{{ product.recensioni_count }}</td>
+                    <td>{{ product.avg_stelle }}</td>
+                    <td>{{ product.quantita }}</td>
+                    <td>
+                      <!-- Icona per la modifica -->
+                      <a
+                        href="{{ url_for('edit_product', product_id=product.id) }}"
+                        class="text-warning"
+                      >
+                        <i class="bi bi-pencil-square"></i>
+                      </a>
+
+                      <!-- Icona per l'eliminazione -->
+                      <form
+                        action="{{ url_for('delete_product', product_id=product.id) }}"
+                        method="POST"
+                        style="display: inline"
+                      >
+                        <button
+                          type="submit"
+                          class="btn btn-link text-danger p-0"
+                          onclick="return confirm('Sei sicuro di voler eliminare questo prodotto?');"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+   <!-- Footer sempre in fondo -->
+   <footer class="bg-dark text-white py-4 mt-auto">
+    <div class="container text-center">
+        <p>&copy; 2024 Shoe Store. Tutti i diritti riservati.</p>
+        <ul class="list-inline">
+            <li class="list-inline-item"><a href="#" class="text-white">Privacy Policy</a></li>
+            <li class="list-inline-item"><a href="#" class="text-white">Termini di Servizio</a></li>
+            <li class="list-inline-item"><a href="#" class="text-white">Supporto</a></li>
+        </ul>
+    </div>
+</footer>
+
+ <!-- Bootstrap JS and Popper.js -->
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+
+  </body>
+</html>

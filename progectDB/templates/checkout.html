@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        header p {
+            color: #555;
+        }
+        .checkout-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 30px;
+        }
+        .form-section {
+            flex: 3;
+        }
+        .order-summary {
+            flex: 1;
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 1.8em;
+            color: #555;
+            margin-bottom: 20px;
+        }
+        section {
+            margin-bottom: 30px;
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .confirm-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .confirm-btn:hover {
+            background-color: #0056b3;
+        }
+        .new-address, .new-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .saved-addresses label, .saved-cards label {
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .saved-addresses label:hover, .saved-cards label:hover {
+            background-color: #e9ecef;
+        }
+        .order-summary ul {
+            list-style: none;
+            padding: 0;
+        }
+        .order-summary li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 0;
+        }
+        .order-summary li:last-child {
+            border-bottom: none;
+        }
+        .product-details {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .product-details img {
+            width: 60px;
+            height: 60px;
+            border-radius: 5px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        h3 {
+            font-size: 1.5em;
+            color: #333;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <!-- Pagina del checkout dove verranno inserite le informazioni di spedizione e pagamento-->
+    <div class="container">
+        <header>
+            <h1>Checkout</h1>
+            <p>Completa i dettagli per la spedizione e il pagamento</p>
+        </header>
+        <div class="checkout-wrapper">
+            <div class="form-section">
+                <form action="{{ url_for('checkout') }}" method="post">
+                    <section class="shipping-info">
+                        <h2>Informazioni di Spedizione</h2>
+                        <p>Seleziona un indirizzo salvato:</p>
+                        <div class="saved-addresses">
+                            {% for indirizzo in indirizzi %}
+                                <label>
+                                    <input type="radio" name="indirizzo" value="{{ indirizzo.id }}">
+                                    {{ indirizzo.via }}, {{ indirizzo.citta }} ({{ indirizzo.cap }})
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <p>Inserisci un nuovo indirizzo:</p>
+                        <div class="new-address">
+                            <input type="text" name="citta" placeholder="Città">
+                            <input type="text" name="via" placeholder="Via">
+                            <input type="number" name="numero" placeholder="Numero civico">
+                            <input type="text" name="cap" placeholder="CAP">
+                            <input type="text" name="provincia" placeholder="Provincia">
+                        </div>
+                    </section>
+                    <section class="payment-info">
+                        <h2>Informazioni di Pagamento</h2>
+                        <p>Seleziona una carta salvata:</p>
+                        <div class="saved-cards">
+                            {% for carta in carte %}
+                                <label>
+                                    <input type="radio" name="carta" value="{{ carta.id }}">
+                                    **** {{ carta.numero[-4:] }} - {{ carta.nome }} {{ carta.cognome }}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <p>Inserisci una nuova carta:</p>
+                        <div class="new-card">
+                            <input type="text" name="nome_carta" placeholder="Nome sulla carta">
+                            <input type="text" name="cognome_carta" placeholder="Cognome sulla carta">
+                            <input type="text" name="numero_carta" placeholder="Numero Carta" maxlength="16">
+                            <input type="month" name="datascadenza" placeholder="Data di Scadenza">
+                            <input type="number" name="cvv" placeholder="CVV" maxlength="3">
+                        </div>
+                    </section>
+                    <button type="submit" class="confirm-btn">Conferma Ordine</button>
+                </form>
+            </div>
+            <div class="order-summary">
+                <h2>Sommario Ordine</h2>
+                <ul>
+                    {% for item in cart %}
+                        <li>
+                            <div class="product-details">
+                                <img src="{{ item.image_url }}" alt="{{ item.nome }}">
+                                <div>
+                                    <p>{{ item.nome }}</p>
+                                    <p>Quantità: {{ item.quantita }}</p>
+                                    <p>Taglia: {{ item.taglia }}</p>
+                                </div>
+                            </div>
+                            <p>€{{ item.prezzo }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <h3>Totale: €{{ total_price }}</h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

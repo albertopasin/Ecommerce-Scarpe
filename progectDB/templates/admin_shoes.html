@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestione Scarpe - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <div class="container mt-5 flex-grow-1">
+        <h1>Elenco Scarpe</h1>
+
+        <!-- Messaggi Flash -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div>
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+            <!-- Mostra in tabella tutte le scarpe-->
+        <table class="table table-striped table-bordered mt-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID Prodotto</th>
+                    <th>Nome</th>
+                    <th>Prezzo</th>
+                    <th>Descrizione</th>
+                    <th>Colore</th>
+                    <th>Categoria</th>
+                    <th>Quantità Disponibile</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shoe in shoes %}
+                <tr>
+                    <td>{{ shoe.product_id }}</td>
+                    <td>{{ shoe.shoe_name }}</td>
+                    <td>{{ shoe.shoe_price }}</td>
+                    <td>{{ shoe.description }}</td>
+                    <td>{{ shoe.color }}</td>
+                    <td>{{ shoe.category_name }}</td>
+                    <td>{{ shoe.available_quantity }}</td>
+                    <td>
+                        <form action="{{ url_for('delete_shoe', product_id=shoe.product_id) }}" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare questa scarpa?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Elimina</button>
+                        </form>
+
+                        <script type="text/javascript">
+                            function confirmDelete() {
+                                // Mostra la finestra di conferma
+                                    return confirm("Sei sicuro di voler eliminare questo utente? L'operazione è irreversibile.");
+                                    }
+                        </script>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/admin" class="btn btn-secondary mt-3">Torna alla Dashboard</a>
+    </div>
+
+    <footer class="bg-dark text-white py-4 mt-auto">
+        <div class="container text-center">
+            <p>&copy; 2024 Shoe Store. Tutti i diritti riservati.</p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><a href="#" class="text-white">Privacy Policy</a></li>
+                <li class="list-inline-item"><a href="#" class="text-white">Termini di Servizio</a></li>
+                <li class="list-inline-item"><a href="#" class="text-white">Supporto</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

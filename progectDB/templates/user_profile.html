@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profilo Utente</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body class="d-flex flex-column min-vh-100">
+    {% include 'navbar.html' %}
+    <div class="container">
+      <!--Vediamo i vari campi del profilo con la possibilità di modificarli-->
+      <h2 class="my-4">Modifica Profilo</h2>
+
+      <form method="POST" enctype="multipart/form-data">
+        <!-- Email -->
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            value="{{ email if email else '' }}"
+            required
+          />
+        </div>
+
+        <!-- Soprannome -->
+        <div class="mb-3">
+          <label for="soprannome" class="form-label">Soprannome</label>
+          <input
+            type="text"
+            class="form-control"
+            id="soprannome"
+            name="soprannome"
+            value="{{ soprannome if soprannome else '' }}"
+          />
+        </div>
+
+        <!-- Immagine -->
+        <div class="mb-3">
+          <label for="immagine" class="form-label">Immagine Profilo</label>
+          {% if immagine %}
+          <div class="mb-2">
+            <img src="{{ immagine }}" alt="Immagine Profilo" width="100" />
+          </div>
+          {% endif %}
+          <input
+            type="file"
+            class="form-control"
+            id="immagine"
+            name="immagine"
+          />
+        </div>
+
+        <!-- Indirizzo -->
+        <h4>Indirizzo Predefinito</h4>
+        <div class="mb-3">
+          <label for="citta" class="form-label">Città</label>
+          <input
+            type="text"
+            class="form-control"
+            id="citta"
+            name="citta"
+            value="{{ citta if citta else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="via" class="form-label">Via</label>
+          <input
+            type="text"
+            class="form-control"
+            id="via"
+            name="via"
+            value="{{ via if via else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="numero" class="form-label">Numero</label>
+          <input
+            type="text"
+            class="form-control"
+            id="numero"
+            name="numero"
+            value="{{ numero if numero else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="cap" class="form-label">CAP</label>
+          <input
+            type="text"
+            class="form-control"
+            id="cap"
+            name="cap"
+            value="{{ cap if cap else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="provincia" class="form-label">Provincia</label>
+          <input
+            type="text"
+            class="form-control"
+            id="provincia"
+            name="provincia"
+            value="{{ provincia if provincia else '' }}"
+          />
+        </div>
+
+        <!-- Carta di credito -->
+        <h4>Carta di Credito Predefinita</h4>
+        <div class="mb-3">
+          <label for="numero_carta" class="form-label">Numero Carta</label>
+          <input
+            type="text"
+            class="form-control"
+            id="numero_carta"
+            name="numero_carta"
+            value="{{ numero_carta if numero_carta else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="datascadenza" class="form-label">Data di Scadenza</label>
+          <input
+            type="text"
+            class="form-control"
+            id="datascadenza"
+            name="datascadenza"
+            value="{{ datascadenza if datascadenza else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="cvv" class="form-label">CVV</label>
+          <input
+            type="text"
+            class="form-control"
+            id="cvv"
+            name="cvv"
+            value="{{ cvv if cvv else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="nome_carta" class="form-label">Nome sulla Carta</label>
+          <input
+            type="text"
+            class="form-control"
+            id="nome_carta"
+            name="nome_carta"
+            value="{{ nome_carta if nome_carta else '' }}"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="cognome_carta" class="form-label"
+            >Cognome sulla Carta</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="cognome_carta"
+            name="cognome_carta"
+            value="{{ cognome_carta if cognome_carta else '' }}"
+          />
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn btn-primary">Aggiorna Profilo</button>
+      </form>
+    </div>
+
+   
+    <!-- Footer sempre in fondo -->
+    <footer class="bg-dark text-white py-4 mt-auto">
+      <div class="container text-center">
+        <p>&copy; 2024 Shoe Store. Tutti i diritti riservati.</p>
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Privacy Policy</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Termini di Servizio</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Supporto</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS e Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.min.js"></script>
+  </body>
+</html>

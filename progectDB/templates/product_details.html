@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dettagli del Prodotto - {{ prodotto['nome'] }}</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      .taglia-selezionata {
+        background-color: #0d6efd;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- Sezione Dettagli del Prodotto -->
+    <section class="py-5">
+      <div class="container">
+        <div class="row">
+          <!-- Immagine del Prodotto -->
+          <div class="col-md-6">
+            <!-- Bootstrap Carousel per le immagini del prodotto -->
+            <div
+              id="productImagesCarousel"
+              class="carousel slide"
+              data-bs-ride="carousel"
+            >
+              <div class="carousel-inner">
+                {% for immagine in immagini %}
+                <div
+                  class="carousel-item {% if loop.index == 1 %}active{% endif %}"
+                >
+                  <img
+                    src="/{{ prodotto['immagine'] }}"
+                    class="d-block w-100"
+                    alt="Immagine di {{ prodotto['nome'] }}"
+                  />
+                </div>
+                {% endfor %}
+              </div>
+              <button
+                class="carousel-control-prev"
+                type="button"
+                data-bs-target="#productImagesCarousel"
+                data-bs-slide="prev"
+              >
+                <span
+                  class="carousel-control-prev-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button
+                class="carousel-control-next"
+                type="button"
+                data-bs-target="#productImagesCarousel"
+                data-bs-slide="next"
+              >
+                <span
+                  class="carousel-control-next-icon"
+                  aria-hidden="true"
+                ></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Informazioni del Prodotto -->
+          <div class="col-md-6">
+            <h1 class="display-5">{{ prodotto['nome'] }}</h1>
+            <p class="lead">{{ prodotto['descrizione'] }}</p>
+            <h4 class="text-success">{{ prodotto['prezzo'] }} €</h4>
+
+            <!-- Selezione della Taglia -->
+            <div class="mt-4">
+              <h6>Seleziona la taglia:</h6>
+              <div id="taglieContainer" class="d-flex flex-wrap gap-2">
+                {% for taglia in range(35, 47) %} {% set disponibile = taglia in
+                taglie_disponibili %}
+                <button
+                  type="button"
+                  class="btn {% if disponibile %}btn-outline-primary{% else %}btn-outline-secondary{% endif %} taglia-btn"
+                  {%
+                  if
+                  not
+                  disponibile
+                  %}disabled{%
+                  endif
+                  %}
+                  data-taglia="{{ taglia }}"
+                >
+                  {{ taglia }}
+                </button>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Selezione del Colore -->
+            <h6 class="mt-4">Colore Disponibile: {{ prodotto['colore'] }}</h6>
+
+            <!-- Taglia Selezionata -->
+            <div
+              id="tagliaSelezionataContainer"
+              class="mt-3"
+              style="display: none"
+            >
+              <p>
+                Taglia selezionata: <span id="tagliaSelezionataDisplay"></span>
+              </p>
+            </div>
+
+            <!-- Pulsante Aggiungi al Carrello -->
+            <form
+              id="addToCartForm"
+              action="{{ url_for('add_to_cart') }}"
+              method="POST"
+              onsubmit="return verificaSelezioneTaglia()"
+            >
+              <input
+                type="hidden"
+                name="product_id"
+                value="{{ prodotto['id'] }}"
+              />
+              <input
+                type="hidden"
+                name="taglia_selezionata"
+                id="tagliaSelezionataInput"
+              />
+              <label for="quantità">Quantità:</label>
+              <input
+                type="number"
+                name="quantità"
+                value="1"
+                min="1"
+                class="form-control w-25 mb-3"
+              />
+              <button type="submit" class="btn btn-primary btn-lg">
+                Aggiungi al carrello
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Sezione Recensioni del Prodotto -->
+        <section class="mt-5">
+          <div class="container">
+            <h2>Recensioni</h2>
+            <!-- Media delle recensioni -->
+            {% if media_stelle is not none %}
+            <p>
+              <strong>Media delle recensioni:</strong> {{ media_stelle |
+              round(2) }} stelle
+            </p>
+            {% else %}
+            <p><strong>Non ci sono recensioni per questo prodotto.</strong></p>
+            {% endif %}
+
+            <!-- Elenco delle recensioni esistenti -->
+            {% if recensioni and recensioni|length > 0 %}
+            <div class="list-group mb-4">
+              {% for recensione in recensioni %}
+              <div class="list-group-item">
+                <h5 class="mb-1">
+                  {{ recensione['soprannome'] }}
+                  <small class="text-muted"
+                    >- {{ recensione['stelle'] }} stelle</small
+                  >
+                </h5>
+                <p class="mb-1">{{ recensione['recensione'] }}</p>
+                <small class="text-muted"
+                  >Pubblicata il {{ recensione['data_pubblicazione'] }}</small
+                >
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">
+              Non ci sono recensioni per questo prodotto. Sii il primo a
+              scriverne una!
+            </p>
+            {% endif %}
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Footer sempre in fondo -->
+    <footer class="bg-dark text-white py-4 mt-auto">
+      <div class="container text-center">
+        <p>&copy; 2024 Shoe Store. Tutti i diritti riservati.</p>
+        <ul class="list-inline">
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Privacy Policy</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Termini di Servizio</a>
+          </li>
+          <li class="list-inline-item">
+            <a href="#" class="text-white">Supporto</a>
+          </li>
+        </ul>
+      </div>
+    </footer>
+
+    <script>
+      function verificaSelezioneTaglia() {
+        const tagliaSelezionata = document.getElementById(
+          "tagliaSelezionataInput"
+        ).value;
+        if (!tagliaSelezionata) {
+          alert(
+            "Per favore, seleziona una taglia prima di aggiungere al carrello."
+          );
+          return false; // Previene l'invio del form
+        }
+        return true; // Permette l'invio del form
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const taglieBtns = document.querySelectorAll(".taglia-btn");
+        const tagliaSelezionataInput = document.getElementById(
+          "tagliaSelezionataInput"
+        );
+        const tagliaSelezionataDisplay = document.getElementById(
+          "tagliaSelezionataDisplay"
+        );
+        const tagliaSelezionataContainer = document.getElementById(
+          "tagliaSelezionataContainer"
+        );
+
+        taglieBtns.forEach((btn) => {
+          btn.addEventListener("click", function () {
+            taglieBtns.forEach((b) => b.classList.remove("taglia-selezionata"));
+            this.classList.add("taglia-selezionata");
+            tagliaSelezionataInput.value = this.dataset.taglia;
+            tagliaSelezionataDisplay.textContent = this.dataset.taglia;
+            tagliaSelezionataContainer.style.display = "block";
+          });
+        });
+      });
+
+      function verificaSelezioneTaglia() {
+        const tagliaSelezionata = document.getElementById(
+          "tagliaSelezionataInput"
+        ).value;
+        if (!tagliaSelezionata) {
+          alert(
+            "Per favore, seleziona una taglia prima di aggiungere al carrello."
+          );
+          return false; // Previene l'invio del form
+        } else if (mail) {
+          alert("Prodotto aggiunto al carrello con successo!");
+        }
+
+        return true;
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

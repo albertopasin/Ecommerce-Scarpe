@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Recensioni dei Prodotti</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    {% include 'navbar.html' %}
+
+    <!-- Recensioni dei Prodotti -->
+    <div class="container mt-5">
+        <h1>Recensioni dei Prodotti</h1>
+
+        {% for prodotto_id, prodotto_info in recensioni_per_prodotto.items() %}
+            <div class="mb-4">
+                <h2>
+                    {{ prodotto_info['nome'] }}
+                    <span class="badge bg-primary">Media recensione: {{ prodotto_info['media_stelle'] | round(2) }} stelle</span>
+                </h2>
+                <div class="accordion" id="accordion{{ prodotto_id }}">
+                    {% for recensione in prodotto_info['recensioni'] %}
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="heading{{ recensione['id'] }}">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapse{{ recensione['id'] }}" aria-expanded="true"
+                                        aria-controls="collapse{{ recensione['id'] }}">
+                                    Recensione #{{ recensione['id'] }} ({{ recensione['stelle'] }} stelle)
+                                </button>
+                            </h2>
+                            <div id="collapse{{ recensione['id'] }}" class="accordion-collapse collapse"
+                                 aria-labelledby="heading{{ recensione['id'] }}" data-bs-parent="#accordion{{ prodotto_id }}">
+                                <div class="accordion-body">
+                                    <p><strong>Commento:</strong> {{ recensione['commento'] }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
